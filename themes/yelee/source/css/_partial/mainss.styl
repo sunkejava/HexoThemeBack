@@ -1,23 +1,18 @@
 #container{
-    position:relative;
+    //position:relative;
     min-height:100%;
     #mobile-nav{
         display: none;
-        background: url(../background/bg-57.jpg) #515457;
-        background-size: cover;
         .overlay{
-            height: 100%;
+            height: 110px;
             position: absolute;
             width: 100%;
-            background: #4d4d4d;
+            //background: rgba(255, 255, 255, 0.4);
             &.fixed{
                 position: fixed;
                 height: 42px;
                 z-index: 99;
             }
-        }
-        .intrude-less {
-            background-color: rgba(0, 0, 0, 0.34);
         }
         #header{
             padding: 10px 0 0 0;
@@ -41,35 +36,37 @@
         }
     }
     .left-col {
-		background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 195, 255, 0.4);
         width: left-col-width;
         position:fixed;
         opacity:1;
         transition:all .2s ease-in;
         height:100%;
-
+        overflow-y: auto;
         .overlay{
             width: 100%;
-            height: 100%;
-            //background-color: rgba(0, 0, 0, 0.75);
+            height: 180px;
+            //background-color: rgba(255, 155, 255, 0.4);
             position: absolute;
             opacity: 0.7;
-            z-index: -1;
         }
         .intrude-less {
             width: 76%;
             text-align: center;
             margin: 112px auto 0;
         }
+        li:hover {
+            background: none;
+            font-weight: bold;
+        };
     }
     .mid-col {
         position:absolute;
         right:0;
         min-height:100%;
-        background:rgba(255, 255, 255, 0.4);
+        background: rgba(255, 155, 255, 0.4);
         left: left-col-width;
         width: auto;
-        overflow: hidden;
     }
 
     @media screen and (max-width:1040px) {
@@ -80,42 +77,31 @@
 }
 .header-author{
     text-align: center;
-    margin: 0.67em 0;
+    margin: 13px 0;
     font-family: font-serif, serif;
     font-size: base-font-size + 14;
     transition: 0.3s;
-	&:hover {
-            color: #EEEEEE;
-            background: #258fb8;
-			overflow: hidden;
-			border-radius: 25px;
-			-webkit-border-radius: 25px;
-			-moz-border-radius: 25px;
-
-        }
 }
 #header{
     width:100%;
-    a {
+	//左字体设置
+	a {
         color: #333333;
         &:hover {
             color: #EEEEEE;
-			
         }
     }
     .profilepic{
         text-align: center;
         display: block;
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5), 0px 2px 20px 3px rgba(0, 0, 0, 0.25);
-        border-radius: 300px;
-        width: 128px;
-        height: 128px;
+        border: 5px solid rgba(255, 199, 255, 0.4);
+        border-radius: 50%;
+        width: 128 + base-font-size - 16;
+        height: @width;
         margin: 0 auto;
         position: relative;
         overflow: hidden;
         background: #88acdb;
-        -webkit-transition: all 0.2s ease-in;
-        display: -webkit-box;
         -webkit-box-orient: horizontal;
         -webkit-box-pack: center;
         -webkit-box-align: center;
@@ -128,11 +114,6 @@
             animation-delay: .3s;
             -webkit-animation-duration: .4s;
             -webkit-animation-delay: .3s;
-            &.show{
-                width: 100%;
-                height: 100%;
-                opacity: 1;
-            }
         }
         &:hover {
             background: white;
@@ -154,7 +135,7 @@
     }
     .header-subtitle{
         text-align: center;
-        color:#333333;
+        color: #333333;
         font-size: (14/16)rem;
         line-height: 1.75;
         overflow: hidden;
@@ -164,13 +145,16 @@
         -webkit-box-orient: vertical;
     }
     .header-menu{
-        font-weight: 300;
-        line-height: 31px;
+        menu-line-height = (28/16)rem
+        font-weight: 550;
+        line-height: menu-line-height;
+        font-family: inherit;
         cursor: pointer;
         text-transform: uppercase;
-        float:none;
-        min-height: 150px;
-        margin-left: -12px;
+        float: none;
+        min-height: @line-height * 3;
+        max-height: @line-height * 5;
+        overflow: auto;
         text-align: center;
         display: -webkit-box;
         -webkit-box-orient: horizontal;
@@ -182,25 +166,14 @@
                 font-size: (14/16)rem;
                 min-width: left-col-width;
             }
-            a:hover{
-                color: #FFF;
-                background: #258fb8;
-                border-radius: 2px;
-                padding: 3px;
-                margin: 2px;
-				overflow: hidden;
-			border-radius: 25px;
-			-webkit-border-radius: 25px;
-			-moz-border-radius: 25px;
-            }
         }
     }
     .switch-area{
         position: relative;
         width: 100%;
         overflow: hidden;
-        min-height: 500px;
-        font-size: 14px;
+        min-height: 260px;
+        font-size: (14/16)rem;
         .switch-wrap{
             transition: transform .3s ease-in;
             position: relative;
@@ -223,21 +196,23 @@
     }
     .switch-part2{
         left: 100%;
-        top: 20px;
-        overlay-x: hidden;
         overflow-y: auto;
-        max-height: 200px;
+        max-height: 260px;
+        font-size (12/16)rem
     }
     .switch-part3{
         left: 200%;
-        line-height: 30px;
+        line-height: 1.6;
+        overflow-y: auto;
+        max-height: 260px;
         .switch-friends-link{
+            display: inline-block;
             margin-right: 9px;
             border-radius: 3px;
             padding: 5px;
             &:hover{
-                background: #4d4d4d;
-                color: #fff;
+                background: #CCFFCC;
+                color: #FF99FF;
             }
         }
     }
@@ -247,6 +222,7 @@
         line-height: 30px;
     }
 }
+
 @require "customise/social-icon"
 
 .duoshuo {
@@ -264,7 +240,7 @@
 .scroll {
     z-index: 999;
     position: fixed;
-    bottom: 40px;
+    top: 61.8%;
     text-align: center;
     line-height: 42px;
     a {
@@ -272,25 +248,25 @@
         width: 29px;
         height: 42px;
         font-size: 28px;
-		background: rgba(147, 181, 224, .3) !important;
-        &:last-child {
-            border-bottom: none;
-        };
+        background: rgba(255, 125, 215, .4);
         .fa {
-            color: rgba(255, 255, 255, .8);
+            color: rgba(255, 255, 255, .4);
         }
         &:hover {
-            background: rgba(147, 255, 224, .5) !important; 
+            background: #CC0066 !important; 
             .fa {
                 color: white;
             }
         }
     }
+    a:not(:last-child) {
+        border-bottom: 1px solid white;
+    }
 }
 
 .hide-labels {
     position: fixed;
-    left: 378px;
+    left: left-col-width + 78px;
     top: 30px;
     padding: 1px;
     border: none;
@@ -300,12 +276,12 @@
     font-family: inherit;
     font-size: .9em;
     font-weight: bold;
-    color: #999;
+    color: #666;
     background: none;
     opacity: .32;
     -webkit-appearance: none;
     &:hover {
-        color: #FFF;
+        color: #FF00FF;
         opacity: 1; 
     }
 }
@@ -334,18 +310,14 @@
         a {
             color: gray;
             &:hover {
-				color: #FFF;
-                background: #258fb8;
-                border-radius: 2px;
-                padding: 3px;
-                margin: 2px;
+                color: ;
                 text-decoration: none;
             }
         }
         &:hover {
-            background:#258fb8 ;
+            background: ;
             a {
-                color: #FFF;
+                color: rgba(155,255,255,0.4);
             }
         };
    }
@@ -402,50 +374,3 @@ if hexo-config("progressBar.on") && hexo-config("progressBar.type") == "minimal"
 @media (max-width: 767px)
     .youyan
         padding 20px 10px
-
-/* 多说 */
-.duoshuo{
-    padding: 0 40px;
-}
-#busuanzi_value_site_uv,#busuanzi_value_page_pv{
-    color: #FFF;
-}
-#busuanzi_value_site_uv:hover,#busuanzi_value_page_pv:hover{
-    color: #999;
-}
-.duoshuo {
-    padding: 0 40px;
-}
-
-#disqus_thread {
-    padding: 0 40px;
-}
-
-/* search */
-#search {
-    width: 68%;
-    height: 18px;
-    margin-top: 1px;
-    color: #EEEEEE;
-    padding: 0;
-    font-family: inherit;
-    border: 2px solid transparent;
-    border-bottom: 2px solid lightgray;
-    border-radius: 2px;
-    opacity: .7;
-    background: none;
-    outline:medium;
-	overflow: hidden;
-	border-radius: 25px;
-	-webkit-border-radius: 25px;
-	-moz-border-radius: 25px;
-    &:hover {
-        /* border: 2px solid lightgray; */
-        opacity: 1;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-		overflow: hidden;
-		border-radius: 25px;
-		-webkit-border-radius: 25px;
-		-moz-border-radius: 25px;
-    };
-}
