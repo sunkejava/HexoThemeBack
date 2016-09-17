@@ -1,3 +1,45 @@
+	function openNew(){
+	//获取页面的高度和宽度
+	var sWidth=document.body.scrollWidth;
+	var sHeight=document.body.scrollHeight;
+	
+	//获取页面的可视区域高度和宽度
+	var wHeight=document.documentElement.clientHeight;
+	var oMask=document.createElement("div");
+		oMask.id="mask";
+		oMask.style.height=sHeight+"px";
+		oMask.style.width=sWidth+"px";
+		document.body.appendChild(oMask);
+	var oLogin=document.createElement("div");
+		oLogin.id="login";
+		oLogin.innerHTML="<div class='songnamet'><div class='song-name-box'><marquee width='500px' height='25px' behavior='scroll' loop='-1' direction='right' scrollamount='8' onmouseover='this.stop()' onmouseout='this.start()'><p id='shenquname' class='songname-title'>正在播放："+NeiCeList[albumId].song_list[songId].song_title+"</p></marquee></div></div><div id = 'loginCon' class='loginCons'><video id = 'poster-vid' class= 'video'  width='800px' height='500px' poster='"+NeiCeList[albumId].song_list[songId].pic+"'><source id = 'source-vid' src='"+NeiCeList[albumId].song_list[songId].resurl+"' type='video/mp4'></video></div>";
+		document.body.appendChild(oLogin);
+	
+	$(document).ready(function() {
+			$('video').mediaelementplayer({
+			alwaysShowControls: false,
+			videoVolume: 'horizontal',
+			features: ['playpause','progress','volume','fullscreen']
+				});
+			});
+	//获取登陆框的宽和高
+	 var dHeight=oLogin.offsetHeight;
+	 var dWidth=oLogin.offsetWidth;
+
+		//设置登陆框的left和top
+		 oLogin.style.left=sWidth/2-dWidth/2+"px";
+		 oLogin.style.top=wHeight/2-dHeight/2+"px";
+		document.getElementById('mask').style.background = "rgba(" + imginfo[0].img_color + ",.7)";	
+		//点击关闭按钮
+		var oClose=document.getElementById("close-tv");
+	
+		//点击登陆框以外的区域也可以关闭登陆框
+		oClose.onclick=oMask.onclick=function(){
+					document.body.removeChild(oLogin);
+					document.body.removeChild(oMask);
+					}			
+	
+	}
 jQuery.cookie = function(a, c, b) {
 	if ("undefined" != typeof c) {
         b = b || {};
@@ -30,8 +72,8 @@ else {
             $songTime.text(formatSecond(audio.currentTime) + " / " + formatSecond(audio.duration));
             audio.currentTime < audio.duration / 2 ? $btns.css("background-image", "linear-gradient(90deg, " + roundcolor + " 50%, transparent 50%, transparent), linear-gradient(" + (90 + 180 / (audio.duration / 2) * audio.currentTime) + "deg, " + lightcolor + " 50%, " + roundcolor + " 50%, " + roundcolor + ")") : $btns.css("background-image", "linear-gradient(" + (90 + 180 / (audio.duration / 2) * audio.currentTime) + "deg, " + lightcolor + " 50%, transparent 50%, transparent), linear-gradient(270deg, " + lightcolor + " 50%, " + roundcolor + " 50%, " + roundcolor + ")")
         };
-    apiurl = "https://api.xiaocp.com/player/get.php";
-    fileurl = "http://123.56.131.190:8080/Decline/songlist.jsp?q=" + user;
+    apiurl = "http://123.56.131.190:8080/Decline/mains.jsp";
+    fileurl = apiurl + "?q=" + user;
     "open" != geci ? (songFrom33 = "关闭", hasgeci = !1) : (songFrom33 = "开启", hasgeci = !0);
     random = "open" != random ? !1 : !0;
     var audio = new Audio,
@@ -51,6 +93,7 @@ else {
     $songFrom3 = $(".player .geci", $player);
     $songFrom4 = $(".player .switch-ksclrc", $player);
     $songFrom5 = $(".player .switch-down", $player);
+	$songFrom77 = $(".player .switch-tv", $player);
     songFrom55 = songFrom44 = "";
     roundcolor = "#6c6971";
     lightcolor = "#81c300";
@@ -77,11 +120,14 @@ else {
     $tips.css({
         background: "#38343e"
     });
+	
     var wenkmMedia = {
         play: function() {
+			//默认首次打开列表
+			// $player.toggleClass("showAlbumList");
             $player.addClass("playing");
             cicleTime = setInterval(wenkmCicle, 800);
-            hasLrc && (lrcTime = setInterval(wenkmLrc.lrc.play, 500), $("#wenkmLrc").addClass("show"), $(".switch-down").css("right", "65px"), $(".switch-default").css("right", "95px"), hasdefault ? setTimeout(function() {
+            hasLrc && (lrcTime = setInterval(wenkmLrc.lrc.play, 500), $("#wenkmLrc").addClass("show"), $(".switch-tv").css("right", "95px"),$(".switch-down").css("right", "65px"), $(".switch-default").css("right", "95px"), hasdefault ? setTimeout(function() {
                 $(".switch-ksclrc").show()
             }, 300) : $(".switch-ksclrc").show())
         },
@@ -89,6 +135,7 @@ else {
             clearInterval(cicleTime);
             $player.removeClass("playing");
             $(".switch-ksclrc").hide();
+			$(".switch-tv").css("right", "65px");
             $(".switch-down").css("right", "35px");
             $(".switch-default").css("right", "65px");
             hasLrc && wenkmLrc.lrc.hide()
@@ -115,16 +162,27 @@ else {
         getInfos: function(a) {
             $cover.removeClass("coverplay");
             $songFrom5.hide();
+			$songFrom77.hide();
             songId = a;
             id = NeiCeList[albumId].song_list[songId].song_id;
-			audio.src = "http://123.56.131.190:8080/Decline/songurl.jsp?q=" + NeiCeList[albumId].song_list[songId].song_id;
-            //alert(audio.src);
+            audio.src = NeiCeList[albumId].song_list[songId].resurl;
             $songFrom5.show();
+			$songFrom77.show();
             $songFrom5.html('<a class="down"><i class="fa fa-cloud-download" title="下载：' + NeiCeList[albumId].song_list[songId].song_title + " - " + NeiCeList[albumId].song_list[songId].singer + '"></i></a>');
+			$songFrom77.html('<a class="down1"><i class="fa fa-caret-square-o-right" title="MV观看：' + NeiCeList[albumId].song_list[songId].song_title + " - " + NeiCeList[albumId].song_list[songId].singer + '"></i></a>');
             $(".down").click(function() {
                 window.open(audio.src, "newwindow")
             });
-            lrcurl = "http://123.56.131.190:8080/Decline/songLirc.jsp?q=" + id;
+			$(".down1").click(function (){
+				hasgeci = !1;
+				$("li", $albumList).eq(albumId).addClass(cur).find(".artist").html("暂停播放 > ").parent().siblings().removeClass(cur).find(".artist").html("").parent();
+				wenkmTips.show("播放MV - " + NeiCeList[albumId].song_list[songId].song_title);
+				$cover.removeClass("coverplay");
+				RootCookies.SetCookie("player", "no", 30);
+				audio.pause();
+				openNew();
+			});
+            lrcurl = "http://123.56.131.190:8080/Decline/title.jsp";
 			$songName.html("<span>" + LimitStr(NeiCeList[albumId].song_list[songId].song_title) + "</span>");
             $songFrom.html("<span>" + LimitStr(NeiCeList[albumId].song_list[songId].singer) + "</span>");
             $songFrom1.html("<span>" + LimitStr(NeiCeList[albumId].song_list[songId].album) + "</span>");
@@ -141,7 +199,7 @@ else {
                     $cover.removeClass("changing")
                 }, 100);
                 $.ajax({
-                    url: apiurl + "?mode=image_info&parm=" + base64_encode(c.src),
+                    url: "https://api.xiaocp.com/player/get.php?mode=image_info&parm=" + base64_encode(c.src),
                     type: "GET",
                     dataType: "script",
                     success: function() {
@@ -166,12 +224,14 @@ else {
             $cover.html(c);
             audio.volume = volume; - 1 != window.document.cookie.indexOf("player=") ? (wenkmMedia.pause(), $("#wenkmLrc").hide(), setTimeout(function() {
                 $(".switch-ksclrc").hide();
+				$(".switch-tv").css("right", "65px");
                 $(".switch-down").css("right", "35px");
                 $(".switch-default").css("right", "65px")
             }, 1), setTimeout(function() {
                 wenkmTips.show("播放器自动停止播放")
             }, 3E3)) : "close" != auto ? (wenkmTips.show("开始播放 - " + NeiCeList[albumId].song_list[songId].song_title), audio.play(), $cover.addClass("coverplay")) : (wenkmMedia.pause(), $("#wenkmLrc").hide(), setTimeout(function() {
                 $(".switch-ksclrc").hide();
+				$(".switch-tv").css("right", "65px");
                 $(".switch-down").css("right", "35px");
                 $(".switch-default").css("right", "65px")
             }, 1), setTimeout(function() {
@@ -437,23 +497,25 @@ else {
                 hasLrc = !1;
                 $("#wenkmLrc").html("");
                 $(".switch-ksclrc").hide();
+				$(".switch-tv").css("right", "65px");
                 $(".switch-down").css("right", "35px");
                 $(".switch-default").css("right", "65px");
                 hasgeci ? $songFrom3.html('<i class="fa fa-check-circle"></i> Lrc歌词' + songFrom33) : $songFrom3.html('<i class="fa fa-times-circle"></i> Lrc歌词' + songFrom33);
-                $(".switch-down").css("right", "65px");
+                $(".switch-tv").css("right", "95px");
+				$(".switch-down").css("right", "65px");
                 $(".switch-default").css("right", "95px");
                 hasdefault ? setTimeout(function() {
                     $(".switch-ksclrc").show()
                 }, 300) : $(".switch-ksclrc").show();
                 $.ajax({
-                    url: "http://123.56.131.190:8080/Decline/songLirc.jsp?q=" + id,
+                    url:  "http://123.56.131.190:8080/Decline/title.jsp",
                     type: "GET",
                     dataType: "script",
                     success: function() {
                         0 <= cont.indexOf("[00") ? setTimeout(function() {
                             songFrom44 = $("#wenkmLrc").hasClass("hide") ? " - Lrc歌词已关闭！" : " - Lrc歌词获取成功!";
                             wenkmLrc.lrc.format(cont)
-                        }, 500) : (songFrom44 = " - 暂无歌词!", $songFrom3.html('<i class="fa fa-times-circle"></i> 暂无歌词'), $(".switch-ksclrc").hide(), $(".switch-down").css("right", "35px"), $(".switch-default").css("right", "65px"))
+                        }, 500) : (songFrom44 = " - 暂无歌词!", $songFrom3.html('<i class="fa fa-times-circle"></i> 暂无歌词'), $(".switch-ksclrc").hide(),$(".switch-tv").css("right", "65px"), $(".switch-down").css("right", "35px"), $(".switch-default").css("right", "65px"))
                     }
                 })
             },
